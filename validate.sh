@@ -10,7 +10,8 @@ docker build -t breeze-latest .
 
 read -d $'\x04' TEST_PATH < "./build/latest/breeze.yml"
 echo "Executing tests from: $TEST_PATH"
-docker run breeze-latest --build-arg test_path=$TEST_PATH
+ls ./build/latest/example
+docker run breeze-latest #--build-arg test_path=$TEST_PATH
 
 
 #TEST_RESULT=$?
