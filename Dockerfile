@@ -1,13 +1,8 @@
 FROM python:alpine
 
-ADD /build/latest /
+ADD /build/latest /src
 
 RUN pip install coverage
 
-    #mv temp.txt shared
-    #touch ./shared/temp.txt
-
 ARG test_path
-CMD [ "python", "$test_path" ]
-#CMD python --version
-    #[ "ls" ] #[ "echo", "Hello World" ] #> temp.txt
+CMD [ "python", $test_path ]
