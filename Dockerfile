@@ -1,6 +1,6 @@
 FROM python:alpine
 
-ADD latest /
+ADD /build/latest /
 
 #RUN pip install pystrich
 
