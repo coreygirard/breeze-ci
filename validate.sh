@@ -1,3 +1,5 @@
+rm -rf build
+
 mkdir build
 curl https://github.com/coreygirard/breeze-ci-example/archive/master.zip -L -o build/latest.zip
 unzip build/latest.zip -d build/
@@ -5,7 +7,11 @@ mv build/breeze-ci-example-master build/latest
 cp hello.py build/latest/hello.py
 
 docker build -t breeze-latest .
-docker run breeze-latest
+
+TEST_PATH="./example/test_example.py"
+echo "Executing tests from: $TEST_PATH"
+docker run breeze-latest --build-arg test_path=$TEST_PATH
+
 
 TEST_RESULT=$?
 echo "result: $?"
@@ -16,4 +22,4 @@ else
   echo "Tests failed. Not deploying."
 fi
 
-rm -rf build
+#rm -rf build
