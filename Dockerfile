@@ -2,7 +2,12 @@ FROM python:alpine
 
 ADD /build/latest /
 
-#RUN pip install pystrich
+RUN pip install coverage
+
+    #mv temp.txt shared
+    #touch ./shared/temp.txt
 
 ARG test_path
-#CMD [ "python", "./example/test_example.py" ]
+CMD [ "python", "--version" ]
+CMD python --version
+    #[ "ls" ] #[ "echo", "Hello World" ] #> temp.txt
