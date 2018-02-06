@@ -4,4 +4,4 @@ ADD /build/latest /
 
 #RUN pip install pystrich
 
-CMD [ "python", "./hello.py" ]
+CMD [ "python", "./test_example.py" ]

@@ -5,7 +5,10 @@ mv build/breeze-ci-example-master build/latest
 cp hello.py build/latest/hello.py
 
 docker build -t breeze-latest .
-docker run breeze-latest
+
+
+text=`docker run breeze-latest`
+echo "text is $? $text" 
 
 rm -rf build
 
