@@ -8,18 +8,18 @@ cp hello.py build/latest/hello.py
 
 docker build -t breeze-latest .
 
-TEST_PATH="./example/test_example.py"
+read -d $'\x04' TEST_PATH < "./build/latest/breeze.yml"
 echo "Executing tests from: $TEST_PATH"
 docker run breeze-latest --build-arg test_path=$TEST_PATH
 
 
-TEST_RESULT=$?
-echo "result: $?"
+#TEST_RESULT=$?
+#echo "result: $?"
 
-if [ $TEST_RESULT -eq "0" ]; then
-  echo "Tests passed. Deploying..."
-else
-  echo "Tests failed. Not deploying."
-fi
+#if [ $TEST_RESULT -eq "0" ]; then
+#  echo "Tests passed. Deploying..."
+#else
+#  echo "Tests failed. Not deploying."
+#fi
 
 #rm -rf build
