@@ -8,6 +8,6 @@ RUN pip install coverage
     #touch ./shared/temp.txt
 
 ARG test_path
-CMD [ "python", "--version" ]
-CMD python --version
+CMD [ "python", "$test_path" ]
+#CMD python --version
     #[ "ls" ] #[ "echo", "Hello World" ] #> temp.txt
