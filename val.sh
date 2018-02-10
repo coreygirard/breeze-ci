@@ -43,4 +43,4 @@ docker stop breeze-container
 docker rm breeze-container
 docker rmi breeze-image
 rm -rf build
-rm -rf dump
+#rm -rf dump

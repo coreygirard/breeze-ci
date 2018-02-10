@@ -7,9 +7,19 @@ RUN pip install coverage
 ARG test_path
 CMD [ "python", $test_path ]
 
-CMD coverage run /src/example/test_example.py
-CMD coverage annotate -d /src/example/
+#CMD cd /src/example
+#CMD echo "hey" > testing.txt
+#CMD coverage run test_example.py
+#CMD coverage annotate -d .
+#CMD ../..
 
-CMD echo "hey" > hello.txt,cover
+CMD cat /src/example/test_example.py
+CMD cat /src/example/test_example.py > ./test_example.py
 
-CMD echo "hello from Docker" > test.txt
+#CMD coverage run /src/example/test_example.py
+#CMD coverage annotate -d /src/example/
+
+#CMD echo "hey" > ./hello.txt,cover
+
+#CMD mkdir report
+CMD echo "hello from Docker" > ./test.txt
