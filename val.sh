@@ -4,7 +4,7 @@ rm -rf build
 rm -rf dump
 
 mkdir build
-#mkdir build/shared
+mkdir build/shared
 
 curl "$REPO" -L -o build/latest.zip
 unzip build/latest.zip -d build/
@@ -22,6 +22,7 @@ docker rmi breeze-image
 
 docker build -t breeze-image -f "./Dockerfile" --no-cache --build-arg test_path="$TEST_PATH" ./
 docker run -d --name breeze-container -i -t breeze-image
+
 docker cp breeze-container:/ ./dump
 #docker cp breeze-container:coverage_report/example.py,cover ./
 
