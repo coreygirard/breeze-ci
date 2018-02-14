@@ -2,6 +2,7 @@ REPO="https://github.com/coreygirard/breeze-ci-example/archive/master.zip"
 
 rm -rf build
 rm -rf dump
+rm -rf report
 
 mkdir build
 mkdir build/shared
@@ -21,9 +22,11 @@ docker rm breeze-container
 docker rmi breeze-image
 
 docker build -t breeze-image -f "./Dockerfile" --no-cache --build-arg test_path="$TEST_PATH" ./
-docker run -d --name breeze-container -i -t breeze-image
+#docker run -d --name breeze-container -i -t breeze-image
+mkdir report
+docker run -d --name breeze-container -v $(pwd)/report:/report -i -t breeze-image
 
-docker cp breeze-container:/ ./dump
+#docker cp breeze-container:/ ./dump
 docker logs breeze-container
 #docker cp breeze-container:coverage_report/example.py,cover ./
 
@@ -45,4 +48,4 @@ docker stop breeze-container
 docker rm breeze-container
 docker rmi breeze-image
 rm -rf build
-#rm -rf dump
+rm -rf dump
