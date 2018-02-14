@@ -24,6 +24,7 @@ docker build -t breeze-image -f "./Dockerfile" --no-cache --build-arg test_path=
 docker run -d --name breeze-container -i -t breeze-image
 
 docker cp breeze-container:/ ./dump
+docker logs breeze-container
 #docker cp breeze-container:coverage_report/example.py,cover ./
 
 
