@@ -1,0 +1,30 @@
+<html>
+  <body>
+    <div style="height:100px"></div>
+    <div style="width:500px;margin:auto">
+    <span style="font-family: Courier New;">1&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">import&nbspunittest</span><br>
+    <span style="font-family: Courier New;">2&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">import&nbspdoctest</span><br>
+    <span style="font-family: Courier New;">3&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">import&nbspexample</span><br>
+    <span style="font-family: Courier New;">4&nbsp&nbsp</span><span style="font-family: Courier New;"></span><br>
+    <span style="font-family: Courier New;">5&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">class&nbspTestFetchFortyTwo(unittest.TestCase):</span><br>
+    <span style="font-family: Courier New;">6&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbspdef&nbsptest_fetch_forty_two(self):</span><br>
+    <span style="font-family: Courier New;">7&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspresult&nbsp=&nbspexample.fetch_forty_two()</span><br>
+    <span style="font-family: Courier New;">8&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspexpected&nbsp=&nbsp42</span><br>
+    <span style="font-family: Courier New;">9&nbsp&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspself.assertEqual(result,expected)</span><br>
+    <span style="font-family: Courier New;">10&nbsp</span><span style="font-family: Courier New;"></span><br>
+    <span style="font-family: Courier New;">11&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">class&nbspTestFetchFortyTwoWords(unittest.TestCase):</span><br>
+    <span style="font-family: Courier New;">12&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbspdef&nbsptest_fetch_forty_two_words(self):</span><br>
+    <span style="font-family: Courier New;">13&nbsp</span><span style="font-family: Courier New;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp#result&nbsp=&nbspexample.fetch_forty_two_words()</span><br>
+    <span style="font-family: Courier New;">14&nbsp</span><span style="font-family: Courier New;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp#expected&nbsp=&nbsp'forty-two'</span><br>
+    <span style="font-family: Courier New;">15&nbsp</span><span style="font-family: Courier New;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp#self.assertEqual(result,expected)</span><br>
+    <span style="font-family: Courier New;">16&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsppass</span><br>
+    <span style="font-family: Courier New;">17&nbsp</span><span style="font-family: Courier New;"></span><br>
+    <span style="font-family: Courier New;">18&nbsp</span><span style="font-family: Courier New;">#def&nbspload_tests(loader,&nbsptests,&nbspignore):</span><br>
+    <span style="font-family: Courier New;">19&nbsp</span><span style="font-family: Courier New;">#&nbsp&nbsp&nbsp&nbsptests.addTests(doctest.DocTestSuite(example))</span><br>
+    <span style="font-family: Courier New;">20&nbsp</span><span style="font-family: Courier New;">#&nbsp&nbsp&nbsp&nbspreturn&nbsptests</span><br>
+    <span style="font-family: Courier New;">21&nbsp</span><span style="font-family: Courier New;"></span><br>
+    <span style="font-family: Courier New;">22&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">if&nbsp__name__&nbsp==&nbsp'__main__':</span><br>
+    <span style="font-family: Courier New;">23&nbsp</span><span style="font-family: Courier New; background-color:#a5d6a7">&nbsp&nbsp&nbsp&nbspunittest.main()</span><br>
+    </div>
+  </body
+</html>
