@@ -73,8 +73,8 @@ def build_main(stats):
 
     return template.replace('{{table}}', temp)
 
-
 raw_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/report/'
+'''
 template_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/templates/'
 reports = get_raw_reports(raw_path)
 
@@ -93,3 +93,29 @@ with open(os.path.join(template_path, 'index.html'), 'w') as f:
 for k,v in html.items():
     with open(os.path.join(template_path, k), 'w') as f:
         f.write(v)
+'''
+
+
+
+d = {}
+
+with open(os.path.join(raw_path, 'ls_report.txt')) as f:
+    lines = [line.strip('\n') for line in f]
+
+indices = [i for i,e in enumerate(lines) if e == '']
+indices = [-1] + indices + [len(lines)]
+
+lines = [lines[a+1:b] for a, b in zip(indices,indices[1:])]
+for e in lines:
+    a, b = e[0], e[1:]
+
+    while a[-1] in '/:':
+        a = a[:-1]
+    a = a + '/'
+
+
+    for i in b:
+        filepath = a+i
+        d[filepath.replace('/','_')] = filepath
+
+pprint(d)
