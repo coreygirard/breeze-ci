@@ -3,10 +3,9 @@ import sys
 import re
 from pprint import pprint
 import json
+import hashlib
 
-
-def make_rename_lookup():
-    raw_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/report/'
+def make_rename_lookup(raw_path):
     d = {}
 
     with open(os.path.join(raw_path, 'ls_report.txt')) as f:
@@ -23,7 +22,6 @@ def make_rename_lookup():
             a = a[:-1]
         a = a + '/'
 
-
         for i in b:
             filepath = a+i
             d[filepath.replace('/','_')] = filepath
@@ -39,44 +37,15 @@ def get_raw_reports(path):
         if not filename.endswith(',cover'):
             continue
         else:
-            savename = filename[:-6]+'.html'
+            savename = filename[:-6]
 
         filepath = os.path.join(path,filename)
         savepath = os.path.join(path,savename)
+
         with open(filepath,'r') as f:
              temp = [line.strip('\n') for line in f]
              report[savename] = is_covered(temp)
     return report
-
-lookup = {'>':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New; background-color:#a5d6a7">{1}</span><br>',
-          '!':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New; background-color:#ef9a9a">{1}</span><br>',
-          ' ':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New;">{1}</span><br>'}
-def to_html2(rep):
-    with open('/Users/coreygirard/Documents/GitHub/breeze-ci/data/report_template.html', 'r') as f:
-        template = f.read()
-
-    lines = []
-    for i,(a,b) in enumerate(rep, start=1):
-        num = (str(i)+' '*10)[:3].replace(r' ',r'&nbsp')
-        text = b.replace(r' ',r'&nbsp')
-        lines.append(lookup[a].format(num,text))
-    lines = '\n'.join(lines)
-
-    return template.replace('{{text}}', lines)
-
-def to_html(rep):
-    pprint(rep)
-    lines = []
-    for i,(a,b) in enumerate(rep, start=1):
-        num = i
-        text = b.replace(r' ',r'&nbsp')
-        lines.append(lookup[a].format(num,text))
-    lines = '\n'.join(lines)
-
-    #return template.replace('{{text}}', lines)
 
 def to_stats(rep):
     d = {}
@@ -86,84 +55,30 @@ def to_stats(rep):
     return d
 
 
+def collate_data(datapath,user,repo):
+    reports = get_raw_reports(datapath)
+    rename_lookup = make_rename_lookup(datapath)
 
-link = '<a href="/file/{0}">{1}</a><br>'
-row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
-def build_main2(stats, lookup):
-    with open('/Users/coreygirard/Documents/GitHub/breeze-ci/data/index_template.html', 'r') as f:
-        template = f.read()
 
-    temp = []
-    for k,v in stats.items():
-        red = v.get('!', 0)
-        green = v.get('>', 0)
-        percent = round(100*green/(red+green), 2)
 
-        link_built = link.format(k,k)
-        row_built = row.format(link_built,
-                               red,
-                               green,
-                               percent)
 
-        temp.append(row_built)
-    temp = '\n'.join(temp)
+    data = {}
+    for k,v in reports.items():
+        h = hashlib.md5(k.encode('utf-8')).hexdigest()
 
-    return template.replace('{{table}}', temp)
+        filename = rename_lookup[k]
+        data[h] = {'filename': filename,
+                   'lines': v,
+                   'stats': to_stats(v)}
 
-def build_main(stats):
-    with open('/Users/coreygirard/Documents/GitHub/breeze-ci/data/index_template.html', 'r') as f:
-        template = f.read()
+    overall = {}
+    for e in data.values():
+        for k,v in e['stats'].items():
+            overall[k] = overall.get(k, 0) + v
+    data['overall'] = {'stats': overall}
 
-    temp = []
-    for k,v in stats.items():
-        red = v.get('!', 0)
-        green = v.get('>', 0)
-        percent = round(100*green/(red+green), 2)
-
-        link_built = link.format(k,k)
-        row_built = row.format(link_built,
-                               red,
-                               green,
-                               percent)
-
-        temp.append(row_built)
-    temp = '\n'.join(temp)
-
-    return template.replace('{{table}}', temp)
+    with open(os.path.join('/Users/coreygirard/Documents/GitHub/breeze-ci/data/', user, repo, 'recent.json'), 'w') as f:
+        json.dump(data, f, indent=4)
 
 raw_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/report/'
-template_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/templates/'
-reports = get_raw_reports(raw_path)
-
-rename_lookup = make_rename_lookup()
-#pprint(rename_lookup)
-
-
-stats = {k:to_stats(v) for k,v in reports.items()}
-html = {rename_lookup[k[:-5]]:v for k,v in reports.items()}
-
-data = {}
-for k,v in reports.items():
-    k = rename_lookup[k[:-5]]
-    data[k] = {'lines': v,
-               'stats': to_stats(v)}
-
-#pprint(stats)
-pprint(data)
-#print(list(html.values())[0])
-
-#main = build_main(stats)
-#pprint(main)
-
-with open(os.path.join(raw_path, 'data.json'), 'w') as f:
-    json.dump(data, f, indent=4)
-
-
-'''
-with open(os.path.join(template_path, 'index.html'), 'w') as f:
-    f.write(main)
-
-for k,v in html.items():
-    with open(os.path.join(template_path, k), 'w') as f:
-        f.write(v)
-'''
+collate_data(raw_path,'coreygirard','breeze-ci-example')

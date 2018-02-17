@@ -1,5 +1,6 @@
 {
-    "/src/example/example.py": {
+    "3f8aad2181b0182cd28015d55bbd639c": {
+        "filename": "/src/example/example.py",
         "lines": [
             [
                 ">",
@@ -59,7 +60,8 @@
             "!": 1
         }
     },
-    "/src/example/test_example.py": {
+    "da430d31ca8a56207229189cc8efa844": {
+        "filename": "/src/example/test_example.py",
         "lines": [
             [
                 ">",
@@ -156,6 +158,12 @@
         ],
         "stats": {
             ">": 13
+        }
+    },
+    "overall": {
+        "stats": {
+            ">": 24,
+            "!": 1
         }
     }
 }

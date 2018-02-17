@@ -1,4 +1,4 @@
-REPO="https://github.com/coreygirard/breeze-ci-example/archive/master.zip"
+REPO="$1/archive/master.zip"
 
 rm -rf build
 rm -rf dump
