@@ -51,13 +51,18 @@ def build_index(user, repo):
 
     return render_template('index_template.html', userrepo=header, table=temp)
 
+def get_report_line(a, num, text):
+    lookup = {'>': ' background-color:#a5d6a7',
+              '!': ' background-color:#ef9a9a',
+              ' ': ''}
 
-lookup = {'>':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
-              '<span style="font-family: Inconsolata, Courier New; background-color:#a5d6a7">{1}</span><br>',
-          '!':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
-              '<span style="font-family: Inconsolata, Courier New; background-color:#ef9a9a">{1}</span><br>',
-          ' ':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
-              '<span style="font-family: Inconsolata, Courier New;">{1}</span><br>'}
+    s = '    <span style="font-family: Inconsolata, Courier New;">{num}</span>' + \
+        '<span style="font-family: Inconsolata, Courier New;{color}">{line}</span><br>'
+
+    return s.format(num=num,
+                    color=lookup[a],
+                    line=text)
+
 def build_report(user, repo, filename):
     with open(os.path.join('data', user, repo, 'recent.json'), 'r') as f:
         data = json.load(f)[filename]
@@ -69,20 +74,18 @@ def build_report(user, repo, filename):
 
     lines = []
 
-    #lines.append('''<h2><span style="font-family: 'PT Sans Narrow', sans-serif">/src/example/example.py</span></h2>''')
     lines.append('''<h2><span style="font-family: 'PT Sans', sans-serif">/src/example/example.py</span></h2>''')
-    #lines.append('''<h2><span style="font-family: 'Oswald', sans-serif">/src/example/example.py</span></h2>''')
     for i,(a,b) in enumerate(data['lines'], start=1):
         num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ',r'&nbsp')
         text = b.replace(r' ',r'&nbsp')
-        lines.append(lookup[a].format(num,text))
+        lines.append(get_report_line(a, num, text))
 
     row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
     lines.append('<table>')
     red = data['stats'].get('!', 0)
     green = data['stats'].get('>', 0)
     percent = round(100*green/(red+green), 2)
-    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''', 
+    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''',
                             red, green, percent))
     lines.append('</table>')
 
