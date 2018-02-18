@@ -1,4 +1,5 @@
 import os
+import os
 import sys
 import re
 from pprint import pprint
@@ -54,13 +55,9 @@ def to_stats(rep):
             d[e] = d.get(e,0)+1
     return d
 
-
 def collate_data(path, user, repo, commit):
     reports = get_raw_reports(os.path.join(path, 'report'))
     rename_lookup = make_rename_lookup(os.path.join(path, 'report'))
-
-
-
 
     data = {}
     for k,v in reports.items():
@@ -83,9 +80,41 @@ def collate_data(path, user, repo, commit):
         json.dump(data, f, indent=4)
 
 
-path = sys.argv[1] # example: '/Users/coreygirard/Documents/GitHub/breeze-ci/'
-user = sys.argv[2] # example: 'coreygirard'
-repo = sys.argv[3] # example: 'breeze-ci-example'
-commit = sys.argv[4] # example: 'f892e2f95e54d16caf0e0140c46220ba56db93c7'
+def get_repo_info(j):
+    repo = j['repository']
+    owner = j['repository']['owner']
+    return {'name': repo['name'],
+            'private': repo['private'],
+            'url': repo['html_url'],
+            'owner_name': owner['name'],
+            'owner_email': owner['email'],
+            'owner_avatar': owner['avatar_url'],
+            'owner_url': owner['html_url']}
 
-collate_data(path, user, repo, commit)
+def get_commit_info(j):
+    temp = j['head_commit']
+    return {'id': temp['id'],
+            'message': temp['message'],
+            'timestamp': temp['timestamp'],
+            'url': temp['url'],
+            'committer_name': temp['committer']['name'],
+            'committer_email': temp['committer']['email'],
+            'committer_username': temp['committer']['username'],
+            'committer_url': j['sender']['html_url'],
+            'committer_avatar': j['sender']['avatar_url']}
+
+def from_webhook(path, data):
+    data = {'repo': get_repo_info(data),
+            'commit': get_commit_info(data)}
+
+    os.system(os.path.join(path, 'val.sh') + ' "{0}"'.format(data['repo']['url']))
+
+    user, repo = data['repo']['owner_name'], data['repo']['name']
+    os.system('mkdir "{0}"'.format(os.path.join(path, 'data', user)))
+    os.system('mkdir "{0}"'.format(os.path.join(path, 'data', user, repo)))
+
+    collate_data(path, user, repo, data['commit']['id'])
+
+    os.system('rm -rf "{0}"'.format(os.path.join(path, 'report')))
+
+    return "200"
