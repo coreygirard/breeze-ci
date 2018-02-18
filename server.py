@@ -12,11 +12,17 @@ app = Flask(__name__)
 @app.route('/<user>/<repo>')
 @app.route('/<user>/<repo>/')
 def repo(user, repo):
-    return render.build_index(user, repo)
+    try:
+        return render.build_index(user, repo)
+    except:
+        return "404"
 
 @app.route('/<user>/<repo>/<filename>')
 def repo_file(user, repo, filename):
-    return render.build_report(user, repo, filename)
+    try:
+        return render.build_report(user, repo, filename)
+    except:
+        return "404"
 
 
 @app.route('/webhook', methods=['POST'])

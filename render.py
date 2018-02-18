@@ -52,27 +52,29 @@ def build_index(user, repo):
     return render_template('index_template.html', userrepo=header, table=temp)
 
 
-lookup = {'>':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New; background-color:#a5d6a7">{1}</span><br>',
-          '!':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New; background-color:#ef9a9a">{1}</span><br>',
-          ' ':'    <span style="font-family: Courier New;">{0}</span>'
-              '<span style="font-family: Courier New;">{1}</span><br>'}
+lookup = {'>':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
+              '<span style="font-family: Inconsolata, Courier New; background-color:#a5d6a7">{1}</span><br>',
+          '!':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
+              '<span style="font-family: Inconsolata, Courier New; background-color:#ef9a9a">{1}</span><br>',
+          ' ':'    <span style="font-family: Inconsolata, Courier New;">{0}</span>'
+              '<span style="font-family: Inconsolata, Courier New;">{1}</span><br>'}
 def build_report(user, repo, filename):
     with open(os.path.join('data', user, repo, 'recent.json'), 'r') as f:
-        data = json.load(f)
+        data = json.load(f)[filename]
 
-    try:
-        data = data[filename]
-    except:
-        return "404"
-
-    lines = []
     # using this method because calc via log had floating point problems
     max_num_len = 1
     while 10**max_num_len < len(data['lines']):
         max_num_len += 1
 
+    lines = []
+
+    lines.append('''<h2><span style="font-family: 'Nunito', sans-serif">/src/example/example.py</span></h2>''')
+    lines.append('''<h2><span style="font-family: 'Nunito Sans', sans-serif">/src/example/example.py</span></h2>''')
+    lines.append('''<h2><span style="font-family: 'Dosis', sans-serif">/src/example/example.py</span></h2>''')
+    lines.append('''<h2><span style="font-family: 'PT Sans Narrow', sans-serif">/src/example/example.py</span></h2>''')
+    lines.append('''<h2><span style="font-family: 'PT Sans', sans-serif">/src/example/example.py</span></h2>''')
+    lines.append('''<h2><span style="font-family: 'Oswald', sans-serif">/src/example/example.py</span></h2>''')
     for i,(a,b) in enumerate(data['lines'], start=1):
         num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ',r'&nbsp')
         text = b.replace(r' ',r'&nbsp')
