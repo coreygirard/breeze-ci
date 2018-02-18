@@ -55,9 +55,9 @@ def to_stats(rep):
     return d
 
 
-def collate_data(datapath,user,repo):
-    reports = get_raw_reports(datapath)
-    rename_lookup = make_rename_lookup(datapath)
+def collate_data(path, user, repo, commit):
+    reports = get_raw_reports(os.path.join(path, 'report'))
+    rename_lookup = make_rename_lookup(os.path.join(path, 'report'))
 
 
 
@@ -77,8 +77,19 @@ def collate_data(datapath,user,repo):
             overall[k] = overall.get(k, 0) + v
     data['overall'] = {'stats': overall}
 
-    with open(os.path.join('/Users/coreygirard/Documents/GitHub/breeze-ci/data/', user, repo, 'recent.json'), 'w') as f:
+    with open(os.path.join(path, 'data', user, repo, 'recent.json'), 'w') as f:
+        json.dump(data, f, indent=4)
+    with open(os.path.join(path, 'data', user, repo, '{0}.json'.format(commit)), 'w') as f:
         json.dump(data, f, indent=4)
 
-raw_path = '/Users/coreygirard/Documents/GitHub/breeze-ci/report/'
-collate_data(raw_path,'coreygirard','breeze-ci-example')
+
+path = sys.argv[1]
+user = sys.argv[2]
+repo = sys.argv[3]
+commit = sys.argv[4]
+
+#path = '/Users/coreygirard/Documents/GitHub/breeze-ci/'
+#user = 'coreygirard'
+#repo = 'breeze-ci-example'
+collate_data(path, user, repo, commit)
+# python3 generate_report_json.py "/Users/coreygirard/Documents/GitHub/breeze-ci/" "coreygirard" "breeze-ci-example"

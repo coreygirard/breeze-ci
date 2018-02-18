@@ -129,7 +129,7 @@ def source(filename):
 def get_repo_info(j):
     repo = j['repository']
     owner = j['repository']['owner']
-    return {'repo_name': repo['name'],
+    return {'name': repo['name'],
             'private': repo['private'],
             'url': repo['html_url'],
             'owner_name': owner['name'],
@@ -149,9 +149,6 @@ def get_commit_info(j):
             'committer_url': j['sender']['html_url'],
             'committer_avatar': j['sender']['avatar_url']}
 
-
-
-
 @app.route('/webhook', methods=['POST'])
 def hook():
     j = request.get_json()
@@ -160,7 +157,21 @@ def hook():
             'commit': get_commit_info(j)}
     pprint(data)
 
-    os.system('./test.sh "{0}"'.format(data['repo']['url']))
+    os.system('./val.sh "{0}"'.format(data['repo']['url']))
+
+    path = '/Users/coreygirard/Documents/GitHub/breeze-ci/'
+    user, repo = data['repo']['owner_name'], data['repo']['name']
+    os.system('mkdir "{0}"'.format(os.path.join(path, 'data', user)))
+    os.system('mkdir "{0}"'.format(os.path.join(path, 'data', user, repo)))
+    cmd = '{0} {1} "{2}" "{3}" "{4}" "{5}"'.format('python3',
+                                             'generate_report_json.py',
+                                             path,
+                                             user,
+                                             repo,
+                                             data['commit']['id'])
+    os.system(cmd)
+    os.system('rm -rf "{0}"'.format(os.path.join(path, 'report')))
+
 
     return "200"
 
