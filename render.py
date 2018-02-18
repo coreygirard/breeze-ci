@@ -69,16 +69,22 @@ def build_report(user, repo, filename):
 
     lines = []
 
-    lines.append('''<h2><span style="font-family: 'Nunito', sans-serif">/src/example/example.py</span></h2>''')
-    lines.append('''<h2><span style="font-family: 'Nunito Sans', sans-serif">/src/example/example.py</span></h2>''')
-    lines.append('''<h2><span style="font-family: 'Dosis', sans-serif">/src/example/example.py</span></h2>''')
-    lines.append('''<h2><span style="font-family: 'PT Sans Narrow', sans-serif">/src/example/example.py</span></h2>''')
+    #lines.append('''<h2><span style="font-family: 'PT Sans Narrow', sans-serif">/src/example/example.py</span></h2>''')
     lines.append('''<h2><span style="font-family: 'PT Sans', sans-serif">/src/example/example.py</span></h2>''')
-    lines.append('''<h2><span style="font-family: 'Oswald', sans-serif">/src/example/example.py</span></h2>''')
+    #lines.append('''<h2><span style="font-family: 'Oswald', sans-serif">/src/example/example.py</span></h2>''')
     for i,(a,b) in enumerate(data['lines'], start=1):
         num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ',r'&nbsp')
         text = b.replace(r' ',r'&nbsp')
         lines.append(lookup[a].format(num,text))
+
+    row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
+    lines.append('<table>')
+    red = data['stats'].get('!', 0)
+    green = data['stats'].get('>', 0)
+    percent = round(100*green/(red+green), 2)
+    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''', 
+                            red, green, percent))
+    lines.append('</table>')
 
     lines = Markup('\n'.join(lines))
 
