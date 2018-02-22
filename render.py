@@ -52,12 +52,12 @@ def build_index(user, repo):
     return render_template('index_template.html', userrepo=header, table=temp)
 
 def get_report_line(a, num, text):
-    lookup = {'>': ' background-color:#a5d6a7',
-              '!': ' background-color:#ef9a9a',
-              ' ': ''}
+    lookup = {'>': 'green',
+              '!': 'red',
+              ' ': 'clear'}
 
-    s = '    <span style="font-family: Inconsolata, Courier New;">{num}</span>' + \
-        '<span style="font-family: Inconsolata, Courier New;{color}">{line}</span><br>'
+    s = '    <span class="number">{num}</span>' + \
+        '<span class="code-line line-{color}">{line}</span><br>'
 
     return s.format(num=num,
                     color=lookup[a],

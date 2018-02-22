@@ -1,0 +1,35 @@
+
+.outer-box{
+  background:#fff;
+  width:500px;
+  padding: 20px;
+  margin:auto;
+  border-radius: 5px;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+}
+
+.filename{
+  font-family: 'PT Sans', sans-serif;
+}
+
+.number{
+  font-family: Inconsolata, Courier New;
+}
+
+.code-line{
+  font-family: Inconsolata, Courier New;
+  width: 400px;
+}
+
+.line-green{
+  background-color:#a5d6a7;
+}
+
+.line-red{
+  background-color:#ef9a9a;
+}
+
+.line-clear{
+
+}
