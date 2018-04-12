@@ -1,15 +1,19 @@
-from flask import Flask, request, render_template, Markup, jsonify
 import os
-import random
 import json
-import re
-from pprint import pprint
+from flask import render_template, Markup
+
+
+def fetch_data(user, repo, filename):
+    with open(os.path.join('data', user, repo, 'recent.json'), 'r') as f:
+        data = json.load(f)[filename]
+
+    return data
 
 def make_link_url(data):
     url = 'https://github.com/{0}/{1}/blob/{2}/{3}#L{4}'
     url = url.format(data['user'],
                      data['repo'],
-                     data['_hash'],
+                     data['hash'],
                      data['filepath'],
                      data['line_num'])
     return url
@@ -38,17 +42,63 @@ def make_line_num_span(data):
     return num
 
 def build_code_line(data):
-    user
-    repo
-    _hash
-    filepath
-    line
-    line_num
-    max_line_num_len
-    status
+    num_span = make_line_num_span(data)
+
+    url = make_link_url(data)
+    code_span = make_line_code_span(data['status'],
+                                    data['code'],
+                                    url)
+
+    return num_span + code_span
 
 
-    return num + line
+
+
+
+
+def build_report_header(filename):
+    html = '''<h2><span style="font-family: 'PT Sans', sans-serif">{0}</span></h2>'''
+
+    .format(data['filename'][4:])
+
+def build_report(user, repo, filename):
+    lines = []
+
+    lines.append(
+    for i, (a, b) in enumerate(data['lines'], start=1):
+        num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ', r'&nbsp')
+        text = b.replace(r' ', r'&nbsp')
+        lines.append(get_report_line(a, num, text))
+
+    row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
+    lines.append('<table>')
+    red = data['stats'].get('!', 0)
+    green = data['stats'].get('>', 0)
+    percent = round(100*green/(red+green), 2)
+    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''',
+                            red, green, percent))
+    lines.append('</table>')
+
+    lines = Markup('\n'.join(lines))
+
+    title = 'Breeze CI: {0}/{1}'.format(user, repo)
+
+    return render_template('report_template.html',
+                           title=title,
+                           text=lines)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 link = '<a href="/{user}/{repo}/{hash}">{text}</a><br>'
@@ -77,8 +127,8 @@ def build_index(user, repo):
 
         temp.append(row_built)
 
-    all_red = data['overall']['stats'].get('!',0)
-    all_green = data['overall']['stats'].get('>',0)
+    all_red = data['overall']['stats'].get('!', 0)
+    all_green = data['overall']['stats'].get('>', 0)
     all_percent = round(100*all_green/(all_red+all_green), 2)
     temp.append(row.format('Overall',
                            all_red,
@@ -100,55 +150,3 @@ def build_index(user, repo):
                            title=title,
                            userrepo=header,
                            table=temp)
-
-def build_line_with_deep_link(user, repo, h, filepath, line_num):
-    url = 'https://github.com/{0}/{1}/blob/{2}{3}#L{4}'
-    url = url.format(user, repo, h, filepath, line_num)
-
-def get_report_line(a, num, text):
-    lookup = {'>': 'green',
-              '!': 'red',
-              ' ': 'clear'}
-
-    s = '    <span class="number">{num}</span>' + \
-        '<span class="code-line line-{color}">{line}</span><br>'
-
-    return s.format(num=num,
-                    color=lookup[a],
-                    line=text)
-
-
-
-def build_report(user, repo, filename):
-    with open(os.path.join('data', user, repo, 'recent.json'), 'r') as f:
-        data = json.load(f)[filename]
-
-    # using this method because calc via log had floating point problems
-    max_num_len = 1
-    while 10**max_num_len < len(data['lines']):
-        max_num_len += 1
-
-    lines = []
-
-    lines.append('''<h2><span style="font-family: 'PT Sans', sans-serif">{0}</span></h2>'''.format(data['filename'][4:]))
-    for i, (a, b) in enumerate(data['lines'], start=1):
-        num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ',r'&nbsp')
-        text = b.replace(r' ',r'&nbsp')
-        lines.append(get_report_line(a, num, text))
-
-    row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
-    lines.append('<table>')
-    red = data['stats'].get('!', 0)
-    green = data['stats'].get('>', 0)
-    percent = round(100*green/(red+green), 2)
-    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''',
-                            red, green, percent))
-    lines.append('</table>')
-
-    lines = Markup('\n'.join(lines))
-
-    title = 'Breeze CI: {0}/{1}'.format(user, repo)
-
-    return render_template('report_template.html',
-                           title=title,
-                           text=lines)

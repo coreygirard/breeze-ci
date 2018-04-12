@@ -1,10 +1,11 @@
 import unittest
 import doctest
-from hypothesis import given
-from hypothesis.strategies import text, one_of, tuples, just, integers, from_regex
-import render
 import re
-'''
+from hypothesis import given
+from hypothesis.strategies import one_of, just, integers, from_regex
+import render
+
+r'''
 class TestBuildCodeLine(unittest.TestCase):
     @given(tuples(from_regex('\A[a-zA-Z0-9]+\Z'),
                   from_regex('\A[a-zA-Z0-9]+\Z'),
@@ -28,8 +29,8 @@ class TestMakeLineCodeSpan(unittest.TestCase):
     @given(one_of(just('>'),
                   just('!'),
                   just(' ')),
-           from_regex('\A[a-zA-Z0-9]*\Z'),
-           from_regex('\A[a-zA-Z0-9]*\Z'))
+           from_regex(r'\A[a-zA-Z0-9]*\Z'),
+           from_regex(r'\A[a-zA-Z0-9]*\Z'))
     def test_make_line_code_span(self, status, code, url):
         line = render.make_line_code_span(status, code, url)
         print(line)
@@ -37,15 +38,15 @@ class TestMakeLineCodeSpan(unittest.TestCase):
         #self.assertEqual(line.count('/'), 10)
 
 class TestMakeLinkUrl(unittest.TestCase):
-    @given(from_regex('\A[a-zA-Z0-9]+\Z'),
-           from_regex('\A[a-zA-Z0-9]+\Z'),
-           from_regex('\A[a-zA-Z0-9]+\Z'),
-           from_regex('\A[a-zA-Z0-9]+\Z'),
+    @given(from_regex(r'\A[a-zA-Z0-9]+\Z'),
+           from_regex(r'\A[a-zA-Z0-9]+\Z'),
+           from_regex(r'\A[a-zA-Z0-9]+\Z'),
+           from_regex(r'\A[a-zA-Z0-9]+\Z'),
            integers(min_value=0))
-    def test_make_link_url(self, user, repo, _hash, filepath, line_num):
+    def test_make_link_url(self, user, repo, hash_, filepath, line_num):
         data = {'user': user,
                 'repo': repo,
-                '_hash': _hash,
+                'hash': hash_,
                 'filepath': filepath,
                 'line_num': line_num}
         line = render.make_link_url(data)
@@ -55,7 +56,7 @@ class TestMakeLinkUrl(unittest.TestCase):
 
         # make sure we're not inserting or deleting slashes
         self.assertEqual(line.count('/'),
-                         render.make_link_url({k:'' for k in data.keys()}).count('/'))
+                         render.make_link_url({k: '' for k in data.keys()}).count('/'))
 
 
 class TestMakeLineNumSpan(unittest.TestCase):
