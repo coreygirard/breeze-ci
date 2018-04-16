@@ -1,8 +1,6 @@
 import os
-import os
 import sys
 import re
-from pprint import pprint
 import json
 import hashlib
 
@@ -49,6 +47,24 @@ def get_raw_reports(path):
     return report
 
 def to_stats(rep):
+    """
+    Generates a summary of the repo's statistics
+
+    Inputs:
+        rep (list): list of two-element tuples, containing a string
+        specifying whether the line was covered or not, and the line itself
+            example: [('>', 'def func(i):'),
+                      (' ', '    # comment'),
+                      ('>', '    j = i + 1'),
+                      ('!', '    if False: j = 0'),
+                      ('>', '    return j')]
+
+    Returns:
+        d (dict): dictionary of how many covered and uncovered lines
+        occur in the file
+            example: {'>': 3, '!': 1}, etc
+    """
+
     d = {}
     for e, _ in rep:
         if e != ' ':
@@ -81,6 +97,10 @@ def collate_data(path, user, repo, commit):
 
 
 def get_repo_info(j):
+    """
+    Prepares a useful summary of the repo
+    """
+
     repo = j['repository']
     owner = j['repository']['owner']
     return {'name': repo['name'],
@@ -92,6 +112,10 @@ def get_repo_info(j):
             'owner_url': owner['html_url']}
 
 def get_commit_info(j):
+    """
+    Prepares a useful summary of the commit
+    """
+
     temp = j['head_commit']
     return {'id': temp['id'],
             'message': temp['message'],
@@ -104,6 +128,11 @@ def get_commit_info(j):
             'committer_avatar': j['sender']['avatar_url']}
 
 def from_webhook(path, data):
+    """
+    Downloads a repo, validates it via automated testing in a container,
+    and prepares and saves the results in JSON format
+    """
+
     data = {'repo': get_repo_info(data),
             'commit': get_commit_info(data)}
 

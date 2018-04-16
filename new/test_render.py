@@ -5,25 +5,6 @@ from hypothesis import given
 from hypothesis.strategies import one_of, just, integers, from_regex
 import render
 
-r'''
-class TestBuildCodeLine(unittest.TestCase):
-    @given(tuples(from_regex('\A[a-zA-Z0-9]+\Z'),
-                  from_regex('\A[a-zA-Z0-9]+\Z'),
-                  from_regex('\A[a-zA-Z0-9]+\Z'),
-                  from_regex('\A[a-zA-Z0-9]+\Z'),
-                  from_regex('\A[a-zA-Z0-9]+\Z'),
-                  integers(min_value=0),
-                  integers(min_value=0, max_value=10),
-                  one_of(just('>'),
-                         just('!'),
-                         just(' '))))
-    def test_build_code_line(self, args):
-        args = list(args)
-
-
-        line = render.build_code_line(*args)
-        self.assertEqual(line.count('/'), 10)
-'''
 
 class TestMakeLineCodeSpan(unittest.TestCase):
     @given(one_of(just('>'),
@@ -33,8 +14,8 @@ class TestMakeLineCodeSpan(unittest.TestCase):
            from_regex(r'\A[a-zA-Z0-9]*\Z'))
     def test_make_line_code_span(self, status, code, url):
         line = render.make_line_code_span(status, code, url)
-        print(line)
-        print()
+        #print(line)
+        #print()
         #self.assertEqual(line.count('/'), 10)
 
 class TestMakeLinkUrl(unittest.TestCase):

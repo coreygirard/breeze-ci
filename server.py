@@ -1,9 +1,4 @@
-from flask import Flask, request, render_template, Markup, jsonify
-import os
-import random
-import json
-import re
-from pprint import pprint
+from flask import Flask, request
 import render
 import generate
 
@@ -12,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/<user>/<repo>')
 @app.route('/<user>/<repo>/')
-def repo(user, repo):
+def repo_index(user, repo):
     try:
         return render.build_index(user, repo)
     except:

@@ -13,7 +13,7 @@ def make_link_url(data):
     url = 'https://github.com/{0}/{1}/blob/{2}/{3}#L{4}'
     url = url.format(data['user'],
                      data['repo'],
-                     data['hash'],
+                     data['hash'], # TODO: check hash
                      data['filepath'],
                      data['line_num'])
     return url
@@ -42,6 +42,37 @@ def make_line_num_span(data):
     return num
 
 def build_code_line(data):
+    '''
+    Args:
+        data (dict): has keys/values:
+            user (str : str): GitHub username
+                example: 'coreygirard'
+
+            repo (str : str): repo name
+                example: 'breeze-ci-example'
+
+            hash (str : str): 32-char commit hash
+                example: 'c514f13080d58d1a4861810b5a77883cf72fd1f0'
+
+            filepath (str : str): relative path to the file from the repo root
+                example: 'example/test_example.py'
+
+            line_num (str : int): number of the current line
+                example: 94
+
+            max_line_num (str : int): number of lines in the file, for spacing
+                example: 154
+
+            status (str : str): one of '>', '!', ' ', corresponding to codecov
+                example: '>'
+
+            code (str: str): the actual line of code
+                example: '    a, b, c = 1, 2, 3'
+
+    Returns:
+        (str): a single line of HTML that renders the line of code
+    '''
+
     num_span = make_line_num_span(data)
 
     url = make_link_url(data)
@@ -58,25 +89,36 @@ def build_code_line(data):
 
 def build_report_header(filename):
     html = '''<h2><span style="font-family: 'PT Sans', sans-serif">{0}</span></h2>'''
+    return html.format(filename)
 
-    .format(data['filename'][4:])
-
-def build_report(user, repo, filename):
-    lines = []
-
-    lines.append(
-    for i, (a, b) in enumerate(data['lines'], start=1):
-        num = (str(i)+' '*(max_num_len+1))[:max_num_len+1].replace(r' ', r'&nbsp')
-        text = b.replace(r' ', r'&nbsp')
-        lines.append(get_report_line(a, num, text))
-
+def build_overall_stats(data):
     row = '<tr><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}%</th></tr>'
-    lines.append('<table>')
+
     red = data['stats'].get('!', 0)
     green = data['stats'].get('>', 0)
     percent = round(100*green/(red+green), 2)
-    lines.append(row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''',
-                            red, green, percent))
+
+    return row.format('''<span style="font-family: 'PT Sans', sans-serif">Total</span>''',
+                      red, green, percent)
+
+def build_report(user, repo, filename):
+    data = fetch_data(user, repo, filename)
+
+    lines = [build_report_header(filename[4:])]
+
+    for i, (status, code) in enumerate(data['lines'], start=1):
+        line_data = {'user': user,
+                     'repo': repo,
+                     'filepath': data['filename'],
+                     'line_num': i,
+                     'max_line_num': len(data['lines']),
+                     'status': status,
+                     'code': code,
+                     'hash': filename}
+        lines.append(build_code_line(line_data))
+
+    lines.append('<table>')
+    lines.append(build_overall_stats(data))
     lines.append('</table>')
 
     lines = Markup('\n'.join(lines))
