@@ -3,8 +3,6 @@ import doctest
 import random
 import generate
 
-from pprint import pprint
-
 from hypothesis import given
 from hypothesis.strategies import dictionaries, lists, text, one_of, just, randoms
 

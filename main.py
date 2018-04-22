@@ -27,5 +27,5 @@ def hook():
     return generate.from_webhook(path='./',
                                  data=j)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+#    app.run(debug=True)
