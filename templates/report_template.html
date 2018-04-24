@@ -2,7 +2,7 @@
   <head>
     <title>{{title}}</title>
     <link href="https://fonts.googleapis.com/css?family=Dosis|Nunito|Nunito+Sans|Oswald|PT+Sans|PT+Sans+Narrow|Nunito|Inconsolata" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}{{cache_buster}}">
   </head>
   <body>
     <div style="height:100px"></div>

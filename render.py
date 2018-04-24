@@ -1,7 +1,7 @@
 import os
 import json
 from flask import render_template, Markup
-
+import random
 
 def fetch_data(user, repo, filename):
     with open(os.path.join('data', user, repo, 'recent.json'), 'r') as f:
@@ -26,9 +26,19 @@ def make_line_code_span(status, code, url):
     else:
         color = 'clear'
 
+    # keep initial spaces from being part of hyperlink
+    indent = len(code) - len(code.lstrip(' '))
+    code = code[indent:]
+
+    # construct hyperlink
     code = code.replace(r' ', r'&nbsp')
     line = '<a href="{url}">{line}</a>'.format(url=url,
                                                line=code)
+
+    # add initial spaces back
+    line = '&nbsp'*indent + line
+
+    # generate span for background coloring
     line = '<span class="code-line line-{color}">{line}</span><br>'.format(color=color,
                                                                            line=line)
     return line
@@ -104,7 +114,7 @@ def build_overall_stats(data):
 def build_report(user, repo, filename):
     data = fetch_data(user, repo, filename)
 
-    lines = [build_report_header(filename[4:])]
+    lines = [build_report_header(data['filename'][4:])]
 
     for i, (status, code) in enumerate(data['lines'], start=1):
         line_data = {'user': user,
@@ -114,7 +124,7 @@ def build_report(user, repo, filename):
                      'max_line_num': len(data['lines']),
                      'status': status,
                      'code': code,
-                     'hash': filename}
+                     'hash': data['commit']}
         lines.append(build_code_line(line_data))
 
     lines.append('<table>')
@@ -125,9 +135,12 @@ def build_report(user, repo, filename):
 
     title = 'Breeze CI: {0}/{1}'.format(user, repo)
 
+    cache_buster = '?n={0}'.format(random.randint(0,1e6))
+
     return render_template('report_template.html',
                            title=title,
-                           text=lines)
+                           text=lines,
+                           cache_buster=cache_buster)
 
 
 

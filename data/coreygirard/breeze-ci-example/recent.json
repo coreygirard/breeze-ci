@@ -1,6 +1,7 @@
 {
     "3f8aad2181b0182cd28015d55bbd639c": {
         "filename": "/src/example/example.py",
+        "commit": "f892e2f95e54d16caf0e0140c46220ba56db93c7",
         "lines": [
             [
                 ">",
@@ -62,6 +63,7 @@
     },
     "da430d31ca8a56207229189cc8efa844": {
         "filename": "/src/example/test_example.py",
+        "commit": "f892e2f95e54d16caf0e0140c46220ba56db93c7",
         "lines": [
             [
                 ">",
@@ -168,6 +170,7 @@
         "stats": {
             ">": 24,
             "!": 1
-        }
+        },
+        "commit": "f892e2f95e54d16caf0e0140c46220ba56db93c7"
     }
 }
