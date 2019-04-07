@@ -1,0 +1,14 @@
+steps:
+- id: 'Deploy to Environment'
+  name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions',
+    'deploy',
+    'insert',
+    '--entry-point',
+    'insert',
+    '--runtime',
+    'python37',
+    '--trigger-http',
+    '--source',
+    'cloud-functions/insert/'
+    ]
